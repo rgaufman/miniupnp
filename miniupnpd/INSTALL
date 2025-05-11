@@ -55,14 +55,31 @@ http://blogs.sun.com/avalon/category/IPFilter
 
 Starting with Mac OS X 10.7 Lion, pf replaced ipfw as the OS X firewall.
 also bsdmake is not available anymore.
-Make sure you have installed the Xcode commande line tools (from the
+Make sure you have installed the Xcode command line tools (from the
 Xcode Preferences menu or using 'xcode-select --install' command)
 
-You need to download xnu sources : https://opensource.apple.com/tarballs/xnu/
-- If version of xnu >= 4570,
+The easiest way to compile on macOS:
+1. First, run the configure script:
   > ./configure
-  Then edit config.h, adding line "#define PFVAR_NEW_STYLE" to it.
-> INCLUDES="-I.../xnu/bsd -I.../xnu/libkern" make
+
+2. Build using the macOS Makefile:
+  > make -f Makefile.macosx
+
+No need to download xnu sources separately - we've included a minimal
+pfvar.h implementation in xnu-minimal/ directory that provides the necessary
+definitions for compiling on macOS.
+
+Our macOS implementation includes the following improvements:
+- Uses a specialized PF implementation for macOS
+- Fixed the common testgetifaddr compilation issue
+- Uses a custom daemonization function instead of the deprecated daemon() call
+
+3. After building, you can create a test configuration file:
+  > cp miniupnpd.conf miniupnpd.test.conf
+  and edit it to set the correct network interfaces (e.g., ext_ifname=en0).
+
+4. To test the daemon (without installing):
+  > sudo ./miniupnpd -f miniupnpd.test.conf -d
 
 ============================ Linux/netfilter ==============================
 To Build and install :

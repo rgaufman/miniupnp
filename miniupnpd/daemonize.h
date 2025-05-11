@@ -10,7 +10,7 @@
 
 #include "config.h"
 
-#ifndef USE_DAEMON
+#if !defined(USE_DAEMON) || defined(__APPLE__)
 /* daemonize()
  * "fork" to background, detach from terminal, etc...
  * returns: pid of the daemon, exits upon failure */

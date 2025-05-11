@@ -1994,13 +1994,20 @@ init(int argc, char * * argv, struct runtime_vars * v)
 	}
 	else
 	{
-#ifdef USE_DAEMON
+#ifdef __APPLE__
+		/* On macOS, use our custom daemonize to avoid deprecation warnings */
+		pid = daemonize();
+#else
+		#ifdef USE_DAEMON
+		/* Use daemon() when enabled and not on macOS */
 		if(daemon(0, 0)<0) {
 			perror("daemon()");
 		}
 		pid = getpid();
-#else
+		#else
+		/* Use custom daemonize function */
 		pid = daemonize();
+		#endif
 #endif
 	}
 #endif

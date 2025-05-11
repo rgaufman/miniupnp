@@ -19,6 +19,7 @@ RM = rm -f
 MV = mv
 INSTALL = install
 STRIP = strip
+INCLUDES = -I. -I./mac
 
 # OSNAME and FWNAME are used for building OS or FW dependent code.
 OSNAME = $(shell uname)
@@ -35,7 +36,8 @@ STD_OBJS = miniupnpd.o upnphttp.o upnpdescgen.o upnpsoap.o \
           upnppinhole.o asyncsendto.o portinuse.o pcpserver.o
 MAC_OBJS = mac/getifstats.o bsd/ifacewatcher.o bsd/getroute.o
 IPFW_OBJS = ipfw/ipfwrdr.o ipfw/ipfwaux.o
-PF_OBJS = pf/obsdrdr.o
+# Use macOS-specific PF implementation
+PF_OBJS = pf/macosx_pf.o
 # pf/pfpinhole.o # SHOULD be used, but doesn't compile on e.g. OS X 10.9.
 MISC_OBJS = upnpreplyparse.o minixml.o
 
@@ -50,7 +52,7 @@ endif
 TEST_UPNPDESCGEN_OBJS = testupnpdescgen.o upnpdescgen.o
 TEST_GETIFSTATS_OBJS = testgetifstats.o mac/getifstats.o
 TEST_UPNPPERMISSIONS_OBJS = testupnppermissions.o upnppermissions.o
-TEST_GETIFADDR_OBJS = testgetifaddr.o getifaddr.o
+TEST_GETIFADDR_OBJS = testgetifaddr.o getifaddr.o getconnstatus.o
 TEST_PORTINUSE_OBJS = testportinuse.o portinuse.o getifaddr.o
 TEST_ASYNCSENDTO_OBJS = testasyncsendto.o asyncsendto.o upnputils.o bsd/getroute.o
 MINIUPNPDCTL_OBJS = miniupnpdctl.o

@@ -18,7 +18,7 @@
 #include "daemonize.h"
 #include "config.h"
 
-#ifndef USE_DAEMON
+#if !defined(USE_DAEMON) || defined(__APPLE__)
 
 int
 daemonize(void)
